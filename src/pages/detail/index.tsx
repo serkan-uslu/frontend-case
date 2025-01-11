@@ -16,7 +16,7 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DetailSkeleton } from '../../components/skeletons/detail';
 import { useMovieDetails } from '../../hooks/useOMDb';
@@ -32,6 +32,10 @@ export const MovieDetails: React.FC = () => {
     disableHysteresis: true,
     threshold: 100,
   });
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   const handleBack = () => {
     navigate('/', { replace: true });

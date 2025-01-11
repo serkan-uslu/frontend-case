@@ -1,9 +1,7 @@
-import { GridView, ViewList } from '@mui/icons-material';
+import { GridView, ViewList, Clear } from '@mui/icons-material';
 import {
   Box,
-  FormControl,
   Grid,
-  InputLabel,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -15,6 +13,8 @@ import {
   IconButton,
   Drawer,
   Button,
+  InputAdornment,
+  Typography,
 } from '@mui/material';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import React, { useCallback, useState } from 'react';
@@ -29,6 +29,15 @@ import {
   setYear,
 } from '../../store/slices/movieSlice';
 import { ROWS_PER_PAGE_OPTIONS, TYPE_OPTIONS } from '../../config/api';
+
+const generateYearOptions = () => {
+  const currentYear = new Date().getFullYear();
+  const years: number[] = [];
+  for (let year = currentYear; year >= 1888; year--) {
+    years.push(year);
+  }
+  return years;
+};
 
 export const SearchControls: React.FC = () => {
   const theme = useTheme();
@@ -46,15 +55,11 @@ export const SearchControls: React.FC = () => {
   // Debounced search handler
   const debouncedSearch = useCallback(
     debounce((value: string) => {
-      dispatch(setSearchTerm(value));
-    }, 500),
-    [dispatch]
-  );
-
-  // Debounced year handler
-  const debouncedYear = useCallback(
-    debounce((value: string) => {
-      dispatch(setYear(value));
+      // Boşlukları temizle ve minimum 3 karakter kontrolü yap
+      const trimmedValue = value.trim();
+      if (trimmedValue.length >= 3) {
+        dispatch(setSearchTerm(trimmedValue));
+      }
     }, 500),
     [dispatch]
   );
@@ -72,8 +77,10 @@ export const SearchControls: React.FC = () => {
     dispatch(setType(event.target.value as 'movie' | 'series' | 'episode' | ''));
   };
 
-  const handleYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedYear(event.target.value);
+  const handleYearChange = (event: SelectChangeEvent) => {
+    const value = event.target.value;
+    setLocalYear(value);
+    dispatch(setYear(value));
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,13 +92,17 @@ export const SearchControls: React.FC = () => {
   };
 
   const handleLocalSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalSearch(event.target.value);
-    handleSearchChange(event);
-  };
+    // Başlangıçtaki boşlukları kaldır
+    const value = event.target.value.trimStart();
+    setLocalSearch(value);
 
-  const handleLocalYearChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalYear(event.target.value);
-    handleYearChange(event);
+    // Boş string kontrolü ve minimum 3 karakter kontrolü
+    const trimmedValue = value.trim();
+    if (trimmedValue === '') {
+      dispatch(setSearchTerm(''));
+    } else if (trimmedValue.length >= 3) {
+      handleSearchChange({ ...event, target: { ...event.target, value } });
+    }
   };
 
   React.useEffect(() => {
@@ -103,53 +114,131 @@ export const SearchControls: React.FC = () => {
   }, [year]);
 
   const searchSection = (
-    <>
+    <Box>
+      <Typography variant="body2" sx={{ mb: 1 }}>
+        Search Movies
+      </Typography>
       <TextField
+        size="small"
         fullWidth
-        label="Search Movies"
         value={localSearch}
+        placeholder="Enter at least 3 characters"
         onChange={handleLocalSearchChange}
         variant="outlined"
+        InputLabelProps={{ shrink: true }}
+        label={null}
+        inputProps={{
+          spellCheck: 'false',
+          minLength: 3,
+        }}
+        InputProps={{
+          endAdornment: localSearch ? (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="clear search"
+                onClick={() => {
+                  setLocalSearch('');
+                  dispatch(setSearchTerm(''));
+                }}
+                edge="end"
+                size="small"
+              >
+                <Clear />
+              </IconButton>
+            </InputAdornment>
+          ) : null,
+        }}
       />
-    </>
+    </Box>
   );
 
   const typeSection = (
-    <FormControl fullWidth>
-      <InputLabel>Type</InputLabel>
-      <Select value={type} label="Type" onChange={handleTypeChange}>
+    <Box>
+      <Typography variant="body2" sx={{ mb: 1 }}>
+        Type
+      </Typography>
+      <Select
+        size="small"
+        fullWidth
+        value={type}
+        onChange={handleTypeChange}
+        displayEmpty
+        variant="outlined"
+      >
+        <MenuItem value="">
+          <em>All Types</em>
+        </MenuItem>
         {TYPE_OPTIONS.map((option: string, index: number) => (
           <MenuItem value={option} key={index}>
             {option}
           </MenuItem>
         ))}
       </Select>
-    </FormControl>
+    </Box>
   );
 
   const rowsPerPageSection = (
-    <FormControl fullWidth>
-      <InputLabel>Items per page</InputLabel>
-      <Select value={rowsPerPage} label="Items per page" onChange={handleRowsPerPageChange}>
+    <Box>
+      <Typography variant="body2" sx={{ mb: 1 }}>
+        Items per page
+      </Typography>
+      <Select
+        size="small"
+        fullWidth
+        value={rowsPerPage}
+        onChange={handleRowsPerPageChange}
+        variant="outlined"
+      >
         {ROWS_PER_PAGE_OPTIONS.map((option: number, index: number) => (
           <MenuItem value={option} key={index}>
             {option}
           </MenuItem>
         ))}
       </Select>
-    </FormControl>
+    </Box>
   );
 
   const yearSection = (
-    <TextField
-      fullWidth
-      label="Year"
-      value={localYear}
-      onChange={handleLocalYearChange}
-      variant="outlined"
-      type="number"
-      inputProps={{ min: 1888, max: new Date().getFullYear() }}
-    />
+    <Box>
+      <Typography variant="body2" sx={{ mb: 1 }}>
+        Year
+      </Typography>
+      <Select
+        size="small"
+        fullWidth
+        value={localYear}
+        onChange={handleYearChange}
+        displayEmpty
+        variant="outlined"
+        endAdornment={
+          localYear ? (
+            <InputAdornment position="end">
+              <IconButton
+                aria-label="clear year"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setLocalYear('');
+                  dispatch(setYear(''));
+                }}
+                size="small"
+                sx={{ mr: 2 }}
+              >
+                <Clear />
+              </IconButton>
+            </InputAdornment>
+          ) : null
+        }
+      >
+        <MenuItem value="">
+          <em>All Years</em>
+        </MenuItem>
+        {generateYearOptions().map((year) => (
+          <MenuItem key={year} value={year.toString()}>
+            {year}
+          </MenuItem>
+        ))}
+      </Select>
+    </Box>
   );
 
   const filterContent = (
@@ -185,7 +274,7 @@ export const SearchControls: React.FC = () => {
 
         {isMobile ? (
           <>
-            <Grid item xs={2}>
+            <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <IconButton onClick={() => setIsFilterOpen(true)} sx={{ mt: 1 }}>
                 <FilterListIcon />
               </IconButton>
@@ -232,19 +321,24 @@ export const SearchControls: React.FC = () => {
             {filterContent}
             <Grid item sm={3}>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <ToggleButtonGroup
-                  value={viewMode}
-                  exclusive
-                  onChange={handleViewModeChange}
-                  aria-label="view mode"
-                >
-                  <ToggleButton value="grid" aria-label="grid view">
-                    <GridView />
-                  </ToggleButton>
-                  <ToggleButton value="table" aria-label="table view">
-                    <ViewList />
-                  </ToggleButton>
-                </ToggleButtonGroup>
+                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
+                  <Typography variant="body2" sx={{ mb: 1 }}>
+                    View Mode
+                  </Typography>
+                  <ToggleButtonGroup
+                    value={viewMode}
+                    exclusive
+                    onChange={handleViewModeChange}
+                    aria-label="view mode"
+                  >
+                    <ToggleButton value="grid" aria-label="grid view">
+                      <GridView />
+                    </ToggleButton>
+                    <ToggleButton value="table" aria-label="table view">
+                      <ViewList />
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Box>
               </Box>
             </Grid>
           </>
