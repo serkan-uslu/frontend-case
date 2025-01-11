@@ -11,7 +11,10 @@ const createQueryString = (params: Record<string, any>): string => {
 };
 
 export const useMovieSearch = (params: SearchParams) => {
-  const queryString = createQueryString(params);
+  const queryString = createQueryString({
+    ...params,
+    pageSize: params.pageSize || 10,
+  });
 
   return useSWR<SearchResponse>(
     // Remove the leading slash

@@ -53,6 +53,7 @@ export type SearchParams = {
   type?: 'movie' | 'series' | 'episode';
   y?: string;
   page?: number;
+  pageSize?: number;
 };
 
 export type MovieDetailsParams = {
@@ -62,3 +63,12 @@ export type MovieDetailsParams = {
   y?: string;
   plot?: 'short' | 'full';
 };
+
+export interface MovieListState {
+  searchTerm: string;
+  year: string;
+  type: 'movie' | 'series' | 'episode' | '';
+  page: number;
+  viewMode: 'grid' | 'table';
+  rowsPerPage: number;
+}

@@ -1,38 +1,31 @@
 import { API_BASE_URL, API_KEY } from '../config/api';
-import { OMDbError } from './errors';
+import { createOMDbError, isOMDbError } from './errors';
 import type { ErrorResponse } from '../types/omdb';
 
 export const fetcher = async <T>(endpoint: string): Promise<T> => {
   try {
-    // Remove leading slash and question mark if present
     const cleanEndpoint = endpoint.replace(/^[/?]+/, '');
-    const url = `${API_BASE_URL}?${cleanEndpoint}&apikey=${API_KEY}`;
-
-    console.log('Fetching:', url); // Debug için
+    const url = `${API_BASE_URL}?${cleanEndpoint.replace(/&?pageSize=\d+/, '')}&apikey=${API_KEY}`;
 
     const response = await fetch(url);
 
     if (!response.ok) {
-      throw new OMDbError(`HTTP error! status: ${response.status}`, response.status);
+      throw createOMDbError(`HTTP error! status: ${response.status}`, response.status);
     }
 
     const data = await response.json();
 
-    // Debug için
-    console.log('Response:', data);
-
-    // Check for API error response
     if (data.Response === 'False') {
       const errorData = data as ErrorResponse;
-      throw new OMDbError(errorData.Error);
+      throw createOMDbError(errorData.Error);
     }
 
     return data as T;
   } catch (error) {
-    if (error instanceof OMDbError) {
+    if (isOMDbError(error)) {
       throw error;
     }
 
-    throw new OMDbError(error instanceof Error ? error.message : 'An unknown error occurred');
+    throw createOMDbError(error instanceof Error ? error.message : 'An unknown error occurred');
   }
 };

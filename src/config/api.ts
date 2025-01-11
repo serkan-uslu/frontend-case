@@ -7,3 +7,11 @@ if (!API_KEY) {
 
 export const CACHE_TIME = 5 * 60 * 1000; // 5 minutes
 export const STALE_TIME = 60 * 1000; // 1 minute
+
+export const ROWS_PER_PAGE = 10;
+
+export const DEFAULT_SEARCH_TERM = 'Pokemon';
+export const DEFAULT_YEAR = '';
+export const DEFAULT_TYPE = '';
+export const DEFAULT_PAGE = 1;
+export const DEFAULT_VIEW_MODE = 'grid';

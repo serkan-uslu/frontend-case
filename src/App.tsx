@@ -1,18 +1,21 @@
-import * as React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Provider } from 'react-redux';
 import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-import { MovieSearch } from './components/MovieSearch';
+import { MovieList } from './components/MovieList';
+import { store } from './store';
+import * as React from 'react';
 
 export default function App() {
   return (
-    <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Movie Search
-        </Typography>
-        <MovieSearch />
-      </Box>
-    </Container>
+    <Provider store={store}>
+      <BrowserRouter>
+        <Container maxWidth="xl" sx={{ py: 4 }}>
+          <Routes>
+            <Route path="/" element={<MovieList />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Container>
+      </BrowserRouter>
+    </Provider>
   );
 }
