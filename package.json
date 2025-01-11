@@ -24,8 +24,11 @@
     "@emotion/styled": "latest",
     "@mui/icons-material": "latest",
     "@mui/material": "latest",
+    "@reduxjs/toolkit": "^2.5.0",
     "react": "latest",
     "react-dom": "latest",
+    "react-redux": "^9.2.0",
+    "react-router-dom": "^7.1.1",
     "swr": "^2.3.0"
   },
   "devDependencies": {
