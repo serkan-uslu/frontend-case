@@ -167,66 +167,89 @@ export const SearchControls: React.FC = () => {
   );
 
   return (
-    <Grid container spacing={2} sx={{ mb: 3 }}>
-      <Grid item xs={isMobile ? 10 : 12} sm={3}>
-        {searchSection}
-      </Grid>
+    <Box
+      sx={{
+        position: 'sticky',
+        top: 0,
+        zIndex: 1100,
+        backgroundColor: 'background.paper',
+        pb: 1,
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+      }}
+    >
+      <Grid container spacing={2} sx={{ mb: 2 }}>
+        <Grid item xs={isMobile ? 10 : 12} sm={3}>
+          {searchSection}
+        </Grid>
 
-      {isMobile ? (
-        <>
-          <Grid item xs={2}>
-            <IconButton onClick={() => setIsFilterOpen(true)} sx={{ mt: 1 }}>
-              <FilterListIcon />
-            </IconButton>
-          </Grid>
-          <Drawer anchor="bottom" open={isFilterOpen} onClose={() => setIsFilterOpen(false)}>
-            <Box sx={{ p: 2 }}>
-              <Grid container spacing={2}>
-                <Grid item xs={12}>
-                  {searchSection}
+        {isMobile ? (
+          <>
+            <Grid item xs={2}>
+              <IconButton onClick={() => setIsFilterOpen(true)} sx={{ mt: 1 }}>
+                <FilterListIcon />
+              </IconButton>
+            </Grid>
+            <Drawer
+              anchor="bottom"
+              open={isFilterOpen}
+              onClose={() => setIsFilterOpen(false)}
+              PaperProps={{
+                sx: {
+                  maxHeight: '80vh',
+                  borderTopLeftRadius: 16,
+                  borderTopRightRadius: 16,
+                },
+              }}
+            >
+              <Box sx={{ p: 2 }}>
+                <Grid container spacing={2}>
+                  <Grid item xs={12}>
+                    {searchSection}
+                  </Grid>
+                  <Grid item xs={12}>
+                    {typeSection}
+                  </Grid>
+                  <Grid item xs={12}>
+                    {rowsPerPageSection}
+                  </Grid>
+                  <Grid item xs={12}>
+                    <Button
+                      fullWidth
+                      variant="contained"
+                      onClick={() => setIsFilterOpen(false)}
+                      sx={{ mt: 2 }}
+                    >
+                      Apply Filters
+                    </Button>
+                  </Grid>
                 </Grid>
-                <Grid item xs={12}>
-                  {typeSection}
-                </Grid>
-                <Grid item xs={12}>
-                  {rowsPerPageSection}
-                </Grid>
-                <Grid item xs={12}>
-                  <Button
-                    fullWidth
-                    variant="contained"
-                    onClick={() => setIsFilterOpen(false)}
-                    sx={{ mt: 2 }}
-                  >
-                    Apply Filters
-                  </Button>
-                </Grid>
-              </Grid>
-            </Box>
-          </Drawer>
-        </>
-      ) : (
-        <>
-          {filterContent}
-          <Grid item sm={3}>
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <ToggleButtonGroup
-                value={viewMode}
-                exclusive
-                onChange={handleViewModeChange}
-                aria-label="view mode"
-              >
-                <ToggleButton value="grid" aria-label="grid view">
-                  <GridView />
-                </ToggleButton>
-                <ToggleButton value="table" aria-label="table view">
-                  <ViewList />
-                </ToggleButton>
-              </ToggleButtonGroup>
-            </Box>
-          </Grid>
-        </>
-      )}
-    </Grid>
+              </Box>
+            </Drawer>
+          </>
+        ) : (
+          <>
+            {filterContent}
+            <Grid item sm={3}>
+              <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <ToggleButtonGroup
+                  value={viewMode}
+                  exclusive
+                  onChange={handleViewModeChange}
+                  aria-label="view mode"
+                >
+                  <ToggleButton value="grid" aria-label="grid view">
+                    <GridView />
+                  </ToggleButton>
+                  <ToggleButton value="table" aria-label="table view">
+                    <ViewList />
+                  </ToggleButton>
+                </ToggleButtonGroup>
+              </Box>
+            </Grid>
+          </>
+        )}
+      </Grid>
+    </Box>
   );
 };

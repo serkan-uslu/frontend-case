@@ -18,7 +18,7 @@ export const RenderGridView: React.FC<{ movies: MovieSearchResult[]; rowsPerPage
     <Grid container spacing={2}>
       {movies.slice(0, rowsPerPage).map((movie) => (
         <Grid item xs={12} sm={6} md={4} lg={3} key={movie.imdbID}>
-          <Card sx={{ height: '100%' }}>
+          <Card sx={{ height: '100%', boxShadow: 'none' }}>
             <CardActionArea onClick={() => handleRowClick(movie.imdbID)}>
               <CardMedia
                 component="img"

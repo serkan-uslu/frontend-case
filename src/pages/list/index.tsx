@@ -40,11 +40,10 @@ export const MovieList: React.FC = () => {
         minHeight: '100vh',
         position: 'relative',
         pb: { xs: 8, sm: 2 },
+        mt: { xs: -1, sm: 0 },
       }}
     >
-      {/* Search Section */}
       <SearchControls />
-      {/* Search Section */}
 
       {/* Error Section */}
       {error && (
