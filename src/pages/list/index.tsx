@@ -27,7 +27,7 @@ export const MovieList: React.FC = () => {
     pageSize: rowsPerPage,
   });
 
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     dispatch(setPage(value));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };

@@ -60,7 +60,7 @@ export const SearchControls: React.FC = () => {
   );
 
   const handleViewModeChange = (
-    event: React.MouseEvent<HTMLElement>,
+    _event: React.MouseEvent<HTMLElement>,
     newMode: 'grid' | 'table'
   ) => {
     if (newMode !== null) {
