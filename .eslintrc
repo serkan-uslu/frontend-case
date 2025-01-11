@@ -1,0 +1,15 @@
+{
+    "extends": [
+        "eslint:recommended",
+        "plugin:prettier/recommended"
+    ],
+    "plugins": [
+        "es"
+    ],
+    "rules": {
+        "prettier/prettier": "error",
+        "es/no-optional-chaining": "error",
+        "es/no-nullish-coalescing-operators": "error",
+        "es/no-rest-spread-properties": "off"
+    }
+}
