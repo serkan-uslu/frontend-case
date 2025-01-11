@@ -1,4 +1,4 @@
-export const API_BASE_URL = 'http://www.omdbapi.com';
+export const API_BASE_URL = 'https://www.omdbapi.com';
 export const API_KEY = import.meta.env.VITE_OMDB_API_KEY;
 
 if (!API_KEY) {
