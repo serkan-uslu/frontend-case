@@ -77,7 +77,7 @@ export const MovieList: React.FC = () => {
                 justifyContent: 'center',
                 alignItems: 'center',
                 gap: 1,
-                pt: 2,
+                pt: 4,
                 position: { xs: 'fixed', sm: 'static' },
                 bottom: { xs: 0, sm: 'auto' },
                 left: { xs: 0, sm: 'auto' },
