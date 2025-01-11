@@ -15,3 +15,9 @@ export const DEFAULT_YEAR = '';
 export const DEFAULT_TYPE = '';
 export const DEFAULT_PAGE = 1;
 export const DEFAULT_VIEW_MODE = 'grid';
+export const DETAIL_ROUTE = '/movie/';
+export const IMAGE_NOT_FOUND = 'https://placehold.co/600x400?text=Image+Not+Found';
+
+export const ROWS_PER_PAGE_OPTIONS = [5, 10, 15, 20, 25];
+export const TYPE_OPTIONS = ['movie', 'series', 'episode'];
+export const VIEW_MODE_OPTIONS = ['grid', 'table'];
