@@ -21,14 +21,8 @@ import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import debounce from 'lodash.debounce';
 import { RootState } from '../../store';
-import {
-  setRowsPerPage,
-  setSearchTerm,
-  setType,
-  setViewMode,
-  setYear,
-} from '../../store/slices/movieSlice';
-import { ROWS_PER_PAGE_OPTIONS, TYPE_OPTIONS } from '../../config/api';
+import { setSearchTerm, setType, setViewMode, setYear } from '../../store/slices/movieSlice';
+import { TYPE_OPTIONS } from '../../config/api';
 
 const generateYearOptions = () => {
   const currentYear = new Date().getFullYear();
@@ -44,9 +38,7 @@ export const SearchControls: React.FC = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const dispatch = useDispatch();
-  const { searchTerm, year, type, viewMode, rowsPerPage } = useSelector(
-    (state: RootState) => state.movies
-  );
+  const { searchTerm, year, type, viewMode } = useSelector((state: RootState) => state.movies);
 
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [localSearch, setLocalSearch] = React.useState(searchTerm);
@@ -85,10 +77,6 @@ export const SearchControls: React.FC = () => {
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     debouncedSearch(event.target.value);
-  };
-
-  const handleRowsPerPageChange = (event: SelectChangeEvent<number>) => {
-    dispatch(setRowsPerPage(event.target.value as number));
   };
 
   const handleLocalSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
