@@ -106,6 +106,7 @@ npm run dev
 
 ### Project Structure
 
+```
 src/
 ├── components/ # Reusable components
 ├── config/ # Configuration files
@@ -114,6 +115,7 @@ src/
 ├── store/ # Redux store and slices
 ├── types/ # TypeScript types
 └── utils/ # Utility functions
+```
 
 
 ## 📄 License
