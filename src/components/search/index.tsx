@@ -211,10 +211,10 @@ export const SearchControls: React.FC = () => {
 
   const filterContent = (
     <>
-      <Grid item xs={12} sm={2}>
+      <Grid item xs={12} sm={3}>
         {YearSection}
       </Grid>
-      <Grid item xs={12} sm={2}>
+      <Grid item xs={12} sm={3}>
         {TypeSection}
       </Grid>
     </>
@@ -279,7 +279,7 @@ export const SearchControls: React.FC = () => {
         ) : (
           <>
             {filterContent}
-            <Grid item sm={5}>
+            <Grid item sm={3}>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                   <Typography variant="body2" sx={{ mb: 1 }}>

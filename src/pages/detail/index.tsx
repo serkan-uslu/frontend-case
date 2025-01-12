@@ -63,7 +63,7 @@ export const MovieDetails: React.FC = () => {
     }
     return (
       <Box sx={{ mb: 2 }}>
-        <Typography variant="subtitle2" color="black" sx={{ fontWeight: 600 }}>
+        <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
           {label}
         </Typography>
         <Typography variant="body1">{value}</Typography>
@@ -139,7 +139,7 @@ export const MovieDetails: React.FC = () => {
         <Button onClick={handleBack} sx={{ m: 2 }} startIcon={<ArrowBackIcon />}>
           Back to List
         </Button>
-        <Grid container spacing={3}>
+        <Grid container spacing={isMobile ? 0 : 3}>
           <Grid item xs={12} md={4}>
             <Box sx={{ p: 2 }}>
               <CardMedia
