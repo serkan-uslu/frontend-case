@@ -177,27 +177,6 @@ export const SearchControls: React.FC = () => {
     </Box>
   );
 
-  const rowsPerPageSection = (
-    <Box>
-      <Typography variant="body2" sx={{ mb: 1 }}>
-        Items per page
-      </Typography>
-      <Select
-        size="small"
-        fullWidth
-        value={rowsPerPage}
-        onChange={handleRowsPerPageChange}
-        variant="outlined"
-      >
-        {ROWS_PER_PAGE_OPTIONS.map((option: number, index: number) => (
-          <MenuItem value={option} key={index}>
-            {option}
-          </MenuItem>
-        ))}
-      </Select>
-    </Box>
-  );
-
   const yearSection = (
     <Box>
       <Typography variant="body2" sx={{ mb: 1 }}>
@@ -249,9 +228,6 @@ export const SearchControls: React.FC = () => {
       <Grid item xs={12} sm={2}>
         {typeSection}
       </Grid>
-      {/* <Grid item xs={12} sm={2}>
-        {rowsPerPageSection}
-      </Grid> */}
     </>
   );
 
@@ -298,9 +274,6 @@ export const SearchControls: React.FC = () => {
                   <Grid item xs={12}>
                     {typeSection}
                   </Grid>
-                  {/* <Grid item xs={12}>
-                    {rowsPerPageSection}
-                  </Grid> */}
                   <Grid item xs={12}>
                     <Button
                       fullWidth
