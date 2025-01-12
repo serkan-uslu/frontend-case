@@ -10,6 +10,8 @@ import { RootState } from '../../store';
 import { setPage } from '../../store/slices/movieSlice';
 import { MovieListState } from '../../types/omdb';
 import { getTotalPages } from '../../utils/helpers';
+import { EmptyState } from '../../components/empty-state';
+import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
 
 export const MovieList: React.FC = () => {
   const theme = useTheme();
@@ -32,8 +34,30 @@ export const MovieList: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const WelcomeScreen = () => (
+    <Box
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '60vh',
+        gap: 2,
+        opacity: 0.7,
+      }}
+    >
+      <LocalMoviesIcon sx={{ fontSize: 100, color: 'text.secondary' }} />
+      <Typography variant="h5" color="text.secondary" align="center">
+        Search for movies, series, and episodes
+      </Typography>
+      <Typography variant="body1" color="text.secondary" align="center">
+        Enter at least 3 characters to start searching
+      </Typography>
+    </Box>
+  );
+
   return (
-    <Paper
+    <Box
       sx={{
         p: { xs: 1, sm: 2 },
         boxShadow: 'none',
@@ -45,28 +69,26 @@ export const MovieList: React.FC = () => {
     >
       <SearchControls />
 
-      {/* Error Section */}
-      {error && (
-        <Box sx={{ p: 2, textAlign: 'center' }}>
-          <Alert severity="error">{error.message}</Alert>
-        </Box>
+      {!searchTerm && <WelcomeScreen />}
+
+      {searchTerm && error && (
+        <EmptyState message="No movies found matching your search criteria" />
       )}
-      {/* Error Section */}
 
       {/* Loading Section */}
-      {isLoading ? (
+      {searchTerm && isLoading ? (
         <ListSkeleton viewMode={viewMode} rowsPerPage={rowsPerPage} />
       ) : (
         <>
           {/* Data Section */}
-          {!error &&
+          {searchTerm &&
+            !error &&
             data?.Search &&
             (viewMode === 'table' && !isMobile ? (
               <RenderTableView movies={data.Search} rowsPerPage={rowsPerPage} />
             ) : (
               <RenderGridView movies={data.Search} rowsPerPage={rowsPerPage} />
             ))}
-          {/* Data Section */}
 
           {/* Pagination Section */}
           {data?.Search && (
@@ -76,6 +98,7 @@ export const MovieList: React.FC = () => {
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
+                mt: 2,
                 gap: 1,
                 pt: 4,
                 position: { xs: 'fixed', sm: 'static' },
@@ -90,11 +113,10 @@ export const MovieList: React.FC = () => {
                 zIndex: 1,
               }}
             >
-              {/* Pagination Section */}
               <Typography
                 variant="body2"
                 color="text.secondary"
-                sx={{ display: { xs: 'none', sm: 'block' } }}
+                sx={{ display: { xs: 'none', sm: 'block' }, textAlign: 'center', mb: 2 }}
               >
                 Total results: {data?.totalResults || 0}
               </Typography>
@@ -106,13 +128,10 @@ export const MovieList: React.FC = () => {
                 siblingCount={isMobile ? 0 : 1}
                 boundaryCount={isMobile ? 1 : 2}
               />
-              {/* Pagination Section */}
             </Box>
           )}
-          {/* Pagination Section */}
         </>
       )}
-      {/* Loading Section */}
-    </Paper>
+    </Box>
   );
 };

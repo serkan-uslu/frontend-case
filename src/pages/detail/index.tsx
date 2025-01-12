@@ -16,11 +16,13 @@ import {
   useMediaQuery,
 } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DetailSkeleton } from '../../components/skeletons/detail';
 import { useMovieDetails } from '../../hooks/useOMDb';
 import { IMAGE_NOT_FOUND } from '../../config/api';
+import { EmptyState } from '../../components/empty-state';
 
 export const MovieDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -48,17 +50,19 @@ export const MovieDetails: React.FC = () => {
   if (isLoading) {
     return <DetailSkeleton />;
   }
-  if (error) {
+
+  if (error || !movie) {
     return (
       <Box sx={{ p: 3, textAlign: 'center' }}>
-        <Typography color="error">Error: {error.message}</Typography>
-      </Box>
-    );
-  }
-  if (!movie) {
-    return (
-      <Box sx={{ p: 3, textAlign: 'center' }}>
-        <Typography>Movie not found</Typography>
+        <EmptyState message="Movie not found" />
+        <Button
+          variant="contained"
+          onClick={handleBack}
+          sx={{ m: 2 }}
+          startIcon={<ArrowBackIcon />}
+        >
+          Back to List
+        </Button>
       </Box>
     );
   }
@@ -96,7 +100,7 @@ export const MovieDetails: React.FC = () => {
   return (
     <>
       <Card sx={{ mb: 4 }}>
-        <Button onClick={handleBack} sx={{ m: 2 }}>
+        <Button onClick={handleBack} sx={{ m: 2 }} startIcon={<ArrowBackIcon />}>
           Back to List
         </Button>
         <Grid container spacing={3}>
