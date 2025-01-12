@@ -116,7 +116,7 @@ export const SearchControls: React.FC = () => {
   const searchSection = (
     <Box>
       <Typography variant="body2" sx={{ mb: 1 }}>
-        Search Movies
+        Search Movies/Series/Episodes
       </Typography>
       <TextField
         size="small"
@@ -169,7 +169,7 @@ export const SearchControls: React.FC = () => {
           <em>All Types</em>
         </MenuItem>
         {TYPE_OPTIONS.map((option: string, index: number) => (
-          <MenuItem value={option} key={index}>
+          <MenuItem value={option} key={index} sx={{ textTransform: 'capitalize' }}>
             {option}
           </MenuItem>
         ))}
@@ -201,7 +201,7 @@ export const SearchControls: React.FC = () => {
   const yearSection = (
     <Box>
       <Typography variant="body2" sx={{ mb: 1 }}>
-        Year
+        Release Date
       </Typography>
       <Select
         size="small"
@@ -249,16 +249,15 @@ export const SearchControls: React.FC = () => {
       <Grid item xs={12} sm={2}>
         {typeSection}
       </Grid>
-      <Grid item xs={12} sm={2}>
+      {/* <Grid item xs={12} sm={2}>
         {rowsPerPageSection}
-      </Grid>
+      </Grid> */}
     </>
   );
 
   return (
     <Box
       sx={{
-        position: 'sticky',
         top: 0,
         zIndex: 1100,
         backgroundColor: 'background.paper',
@@ -299,9 +298,9 @@ export const SearchControls: React.FC = () => {
                   <Grid item xs={12}>
                     {typeSection}
                   </Grid>
-                  <Grid item xs={12}>
+                  {/* <Grid item xs={12}>
                     {rowsPerPageSection}
-                  </Grid>
+                  </Grid> */}
                   <Grid item xs={12}>
                     <Button
                       fullWidth
@@ -319,7 +318,7 @@ export const SearchControls: React.FC = () => {
         ) : (
           <>
             {filterContent}
-            <Grid item sm={3}>
+            <Grid item sm={5}>
               <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                   <Typography variant="body2" sx={{ mb: 1 }}>

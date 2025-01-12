@@ -17,7 +17,7 @@ export const ThemeToggle: React.FC = () => {
       sx={{
         position: 'fixed',
         right: 16,
-        bottom: { xs: 80, sm: 16 },
+        top: { xs: 16, sm: 16 },
         bgcolor: 'background.paper',
         boxShadow: 2,
         zIndex: 1200,

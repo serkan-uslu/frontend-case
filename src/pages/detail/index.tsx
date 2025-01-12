@@ -14,6 +14,7 @@ import {
   Fade,
   useTheme,
   useMediaQuery,
+  Stack,
 } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -21,8 +22,15 @@ import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DetailSkeleton } from '../../components/skeletons/detail';
 import { useMovieDetails } from '../../hooks/useOMDb';
-import { IMAGE_NOT_FOUND } from '../../config/api';
 import { EmptyState } from '../../components/empty-state';
+import { ImageNotFound } from '../../components/image-not-found';
+
+// Tür renklerini tanımla
+const typeColors: Record<string, 'primary' | 'secondary' | 'success'> = {
+  movie: 'primary',
+  series: 'secondary',
+  episode: 'success',
+};
 
 export const MovieDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -47,6 +55,8 @@ export const MovieDetails: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
+  const getTypeColor = (type: string) => typeColors[type?.toLowerCase()] || 'default';
+
   if (isLoading) {
     return <DetailSkeleton />;
   }
@@ -67,13 +77,13 @@ export const MovieDetails: React.FC = () => {
     );
   }
 
-  const DetailItem = ({ label, value }: { label: string; value: string | undefined }) => {
+  const DetailItem = ({ label, value }: { label: string; value: string | React.ReactNode }) => {
     if (!value || value === 'N/A') {
       return null;
     }
     return (
       <Box sx={{ mb: 2 }}>
-        <Typography variant="subtitle2" color="text.secondary">
+        <Typography variant="subtitle2" color="black" sx={{ fontWeight: 600 }}>
           {label}
         </Typography>
         <Typography variant="body1">{value}</Typography>
@@ -97,78 +107,170 @@ export const MovieDetails: React.FC = () => {
     </Box>
   );
 
+  const PlotSection = () => {
+    const [isExpanded, setIsExpanded] = React.useState(false);
+    const plotRef = React.useRef<HTMLParagraphElement>(null);
+    const [showReadMore, setShowReadMore] = React.useState(false);
+
+    React.useEffect(() => {
+      if (plotRef.current) {
+        setShowReadMore(plotRef.current.scrollHeight > plotRef.current.clientHeight);
+      }
+    }, [movie.Plot]);
+
+    return (
+      <Box sx={{ position: 'relative', mb: 3 }}>
+        <Typography
+          ref={plotRef}
+          variant="body1"
+          sx={{
+            maxHeight: isExpanded ? 'none' : '100px',
+            overflow: 'hidden',
+            transition: 'max-height 0.3s ease-out',
+            mb: 1,
+          }}
+        >
+          {movie.Plot}
+        </Typography>
+        {showReadMore && (
+          <Button
+            onClick={() => setIsExpanded(!isExpanded)}
+            sx={{
+              textTransform: 'none',
+              p: 0,
+              minWidth: 'auto',
+              color: 'primary.main',
+              '&:hover': {
+                backgroundColor: 'transparent',
+                textDecoration: 'underline',
+              },
+            }}
+          >
+            {isExpanded ? 'Show Less' : 'Read More'}
+          </Button>
+        )}
+      </Box>
+    );
+  };
+
   return (
     <>
-      <Card sx={{ mb: 4 }}>
+      <Card sx={{ mb: 4, overflow: 'visible', boxShadow: 'none' }}>
         <Button onClick={handleBack} sx={{ m: 2 }} startIcon={<ArrowBackIcon />}>
           Back to List
         </Button>
         <Grid container spacing={3}>
           <Grid item xs={12} md={4}>
-            <CardMedia
-              component="img"
-              image={movie.Poster !== 'N/A' ? movie.Poster : IMAGE_NOT_FOUND}
-              alt={movie.Title}
-              sx={{ maxHeight: 600, objectFit: 'contain' }}
-            />
+            <Box sx={{ p: 2 }}>
+              <CardMedia
+                component="img"
+                image={
+                  movie.Poster !== 'N/A' ? movie.Poster : ImageNotFound({ movieName: movie.Title })
+                }
+                alt={movie.Title}
+                sx={{
+                  maxHeight: 600,
+                  objectFit: 'contain',
+                  borderRadius: 2,
+                }}
+              />
+            </Box>
           </Grid>
           <Grid item xs={12} md={8}>
             <CardContent>
               <Typography variant="h4" gutterBottom>
-                {movie.Title} ({movie.Year})
+                {movie.Title}
               </Typography>
 
-              <Box sx={{ mb: 3 }}>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
-                  {movie.Runtime && <Chip label={movie.Runtime} size="small" />}
-                  {movie.Rated && <Chip label={movie.Rated} size="small" />}
-                  {movie.Type && <Chip label={movie.Type} size="small" />}
-                </Box>
-                {movie.Genre && (
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                    {movie.Genre.split(',').map((genre) => (
-                      <Chip key={genre} label={genre.trim()} size="small" variant="outlined" />
-                    ))}
-                  </Box>
+              <Stack direction="row" spacing={1} sx={{ mb: 3 }}>
+                <Chip label={movie.Year} size="small" variant="outlined" sx={{ borderRadius: 1 }} />
+                <Chip
+                  label={movie.Type}
+                  size="small"
+                  color={getTypeColor(movie.Type)}
+                  sx={{ borderRadius: 1, textTransform: 'capitalize' }}
+                />
+                {movie.Runtime && (
+                  <Chip
+                    label={movie.Runtime}
+                    size="small"
+                    variant="outlined"
+                    sx={{ borderRadius: 1 }}
+                  />
                 )}
-              </Box>
+                {movie.Rated && (
+                  <Chip
+                    label={movie.Rated}
+                    size="small"
+                    color="error"
+                    variant="outlined"
+                    sx={{ borderRadius: 1 }}
+                  />
+                )}
+              </Stack>
+
+              {movie.Genre && (
+                <Box sx={{ mb: 3 }}>
+                  <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                    {movie.Genre.split(',').map((genre) => (
+                      <Chip
+                        key={genre}
+                        label={genre.trim()}
+                        size="small"
+                        color="secondary"
+                        variant="outlined"
+                        sx={{ borderRadius: 1, mt: 1 }}
+                      />
+                    ))}
+                  </Stack>
+                </Box>
+              )}
 
               <RatingSection />
 
-              <DetailItem label="Plot" value={movie.Plot} />
-              <Divider sx={{ my: 2 }} />
+              <PlotSection />
+
+              <Divider sx={{ my: 3 }} />
 
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
                   <DetailItem label="Director" value={movie.Director} />
                   <DetailItem label="Writer" value={movie.Writer} />
-                  <DetailItem label="Actors" value={movie.Actors} />
-                  <DetailItem label="Released" value={movie.Released} />
-                  <DetailItem label="DVD" value={movie.DVD} />
+                  <DetailItem label="Cast" value={movie.Actors} />
+                  <DetailItem label="Release Date" value={movie.Released} />
                   <DetailItem label="Box Office" value={movie.BoxOffice} />
-                  <DetailItem label="Production" value={movie.Production} />
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <DetailItem label="Language" value={movie.Language} />
                   <DetailItem label="Country" value={movie.Country} />
                   <DetailItem label="Awards" value={movie.Awards} />
-                  <DetailItem label="Website" value={movie.Website} />
-                  <DetailItem label="Metascore" value={movie.Metascore} />
-                  <Box sx={{ mb: 2 }}>
-                    <Typography variant="subtitle2" color="text.secondary">
-                      IMDb ID
-                    </Typography>
-                    <Typography
-                      variant="body1"
-                      component="a"
-                      href={`https://www.imdb.com/title/${movie.imdbID}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      sx={{ color: 'primary.main', textDecoration: 'none' }}
-                    >
-                      {movie.imdbID}
-                    </Typography>
-                  </Box>
+                  <DetailItem label="Production" value={movie.Production} />
+                  <DetailItem
+                    label="IMDb"
+                    value={
+                      <Typography
+                        variant="body1"
+                        component="a"
+                        href={`https://www.imdb.com/title/${movie.imdbID}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        sx={{
+                          textDecoration: 'none',
+                          backgroundColor: '#f5c518',
+                          color: '#000',
+                          borderRadius: 1,
+                          p: 1,
+                          fontWeight: 600,
+                          fontSize: 14,
+                          display: 'inline-block',
+                          width: 'fit-content',
+                          cursor: 'pointer',
+                        }}
+                      >
+                        Display on IMDb
+                      </Typography>
+                    }
+                  />
                 </Grid>
               </Grid>
             </CardContent>
@@ -183,7 +285,7 @@ export const MovieDetails: React.FC = () => {
             role="presentation"
             sx={{
               position: 'fixed',
-              bottom: 70,
+              bottom: 16,
               right: 16,
               zIndex: 1100,
             }}

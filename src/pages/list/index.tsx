@@ -1,5 +1,14 @@
 import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
-import { Box, Pagination, Typography, useMediaQuery, useTheme } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  Pagination,
+  PaginationItem,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { EmptyState } from '../../components/empty-state';
@@ -12,6 +21,7 @@ import { RootState } from '../../store';
 import { setPage } from '../../store/slices/movieSlice';
 import { MovieListState } from '../../types/omdb';
 import { getTotalPages } from '../../utils/helpers';
+import { FirstPage, LastPage } from '@mui/icons-material';
 
 export const MovieList: React.FC = () => {
   const theme = useTheme();
@@ -31,6 +41,17 @@ export const MovieList: React.FC = () => {
 
   const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number) => {
     dispatch(setPage(value));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleFirstPage = () => {
+    dispatch(setPage(1));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleLastPage = () => {
+    const lastPage = getTotalPages(data, rowsPerPage);
+    dispatch(setPage(lastPage));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -56,6 +77,10 @@ export const MovieList: React.FC = () => {
     </Box>
   );
 
+  const showPagination = React.useMemo(() => {
+    return searchTerm && data?.Search && data.Search.length > 0 && !error && !isLoading;
+  }, [searchTerm, data, error, isLoading]);
+
   return (
     <Box
       sx={{
@@ -71,19 +96,18 @@ export const MovieList: React.FC = () => {
 
       {!searchTerm && <WelcomeScreen />}
 
-      {searchTerm && error && (
-        <EmptyState message="No movies found matching your search criteria" />
+      {searchTerm && (error || (data && !data.Search?.length)) && (
+        <EmptyState message="No results found matching your search criteria" />
       )}
 
-      {/* Loading Section */}
       {searchTerm && isLoading ? (
         <ListSkeleton viewMode={viewMode} rowsPerPage={rowsPerPage} />
       ) : (
         <>
-          {/* Data Section */}
           {searchTerm &&
             !error &&
             data?.Search &&
+            data.Search.length > 0 &&
             (viewMode === 'table' && !isMobile ? (
               <RenderTableView movies={data.Search} rowsPerPage={rowsPerPage} />
             ) : (
@@ -91,7 +115,7 @@ export const MovieList: React.FC = () => {
             ))}
 
           {/* Pagination Section */}
-          {data?.Search && (
+          {showPagination && (
             <Box
               sx={{
                 display: 'flex',
@@ -120,14 +144,53 @@ export const MovieList: React.FC = () => {
               >
                 Total results: {data?.totalResults || 0}
               </Typography>
-              <Pagination
-                count={getTotalPages(data, rowsPerPage)}
-                page={page}
-                onChange={handlePageChange}
-                color="primary"
-                siblingCount={isMobile ? 0 : 1}
-                boundaryCount={isMobile ? 1 : 2}
-              />
+              <Stack direction="row" spacing={1} alignItems="center">
+                <IconButton
+                  onClick={handleFirstPage}
+                  disabled={page === 1}
+                  size="small"
+                  sx={{
+                    bgcolor: 'background.paper',
+                    '&:hover': { bgcolor: 'action.hover' },
+                  }}
+                >
+                  <FirstPage />
+                </IconButton>
+                <Pagination
+                  count={getTotalPages(data, rowsPerPage)}
+                  page={page}
+                  onChange={handlePageChange}
+                  color="primary"
+                  siblingCount={isMobile ? 0 : 1}
+                  boundaryCount={isMobile ? 1 : 2}
+                  renderItem={(item) => (
+                    <PaginationItem
+                      {...item}
+                      sx={{
+                        bgcolor: 'background.paper',
+                        '&.Mui-selected': {
+                          bgcolor: 'primary.main',
+                          color: 'primary.contrastText',
+                          '&:hover': {
+                            bgcolor: 'primary.dark',
+                          },
+                        },
+                      }}
+                    />
+                  )}
+                />
+                <IconButton
+                  onClick={handleLastPage}
+                  disabled={page === getTotalPages(data, rowsPerPage)}
+                  size="small"
+                  sx={{
+                    bgcolor: 'background.paper',
+                    '&:hover': { bgcolor: 'action.hover' },
+                  }}
+                >
+                  <LastPage />
+                </IconButton>
+              </Stack>
             </Box>
           )}
         </>

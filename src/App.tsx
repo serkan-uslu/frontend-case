@@ -5,12 +5,11 @@ import { MovieList } from './pages/list/index';
 import { MovieDetails } from './pages/detail/index';
 import { store } from './store';
 import React from 'react';
-import { ThemeProvider, CssBaseline } from '@mui/material';
+import { ThemeProvider, CssBaseline, Box } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { RootState } from './store';
-import { ThemeToggle } from './components/theme-toggle';
 import { createTheme } from '@mui/material/styles';
-import { red } from '@mui/material/colors';
+import { Header } from './components/header';
 
 const AppContent = () => {
   const mode = useSelector((state: RootState) => state.theme.mode);
@@ -20,15 +19,6 @@ const AppContent = () => {
       createTheme({
         palette: {
           mode,
-          primary: {
-            main: '#F50057',
-          },
-          secondary: {
-            main: '#19857b',
-          },
-          error: {
-            main: red.A400,
-          },
         },
       }),
     [mode]
@@ -38,14 +28,16 @@ const AppContent = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <BrowserRouter>
-        <Container maxWidth="xl" sx={{ py: 4 }}>
-          <ThemeToggle />
-          <Routes>
-            <Route path="/" element={<MovieList />} />
-            <Route path="/movie/:id" element={<MovieDetails />} />
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Container>
+        <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+          <Header />
+          <Container maxWidth="xl" sx={{ py: 3 }}>
+            <Routes>
+              <Route path="/" element={<MovieList />} />
+              <Route path="/movie/:id" element={<MovieDetails />} />
+              <Route path="*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Container>
+        </Box>
       </BrowserRouter>
     </ThemeProvider>
   );
