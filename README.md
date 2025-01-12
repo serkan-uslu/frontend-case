@@ -2,28 +2,6 @@
 
 A modern React application for searching and exploring movies using the OMDb API. Built with TypeScript, Material-UI, and Redux Toolkit.
 
-## 🌟 Features
-
-- **Search Movies**: Search for movies, series, and episodes
-- **Advanced Filtering**: Filter by year and type
-- **Responsive Design**: Works on both desktop and mobile devices
-- **Dark/Light Mode**: Toggle between dark and light themes
-- **Grid/Table View**: Switch between different view modes
-- **Pagination**: Browse through search results efficiently
-- **Detailed Movie Info**: View comprehensive information about each movie
-- **Persistent Settings**: Saves theme preference and view settings
-
-## 🛠️ Technologies
-
-- React 18
-- TypeScript
-- Material-UI (MUI)
-- Redux Toolkit
-- React Router v6
-- Axios
-- Lodash
-- Vite
-
 ## 🚀 Getting Started
 
 ### Prerequisites
@@ -46,7 +24,7 @@ cd frontend-case
 npm install
 ```
 
-3. Create a `.env` file in the root directory and add your OMDb API key:
+3. Create a `.env` file in the root directory and add your OMDb API key: More information about the API key is available at [OMDb Documentation](OMDBAPI.md)
 
 ```bash
 VITE_OMDB_API_KEY=your_api_key_here
@@ -59,8 +37,6 @@ npm run dev
 ```
 
 5. Open your browser and navigate to `http://localhost:5173` to see the app in action.
-
-
 
 ## 🎯 Usage
 
@@ -117,6 +93,32 @@ src/
 └── utils/ # Utility functions
 ```
 
+## 🌟 Features Summary
+
+- **Search Movies**: Search for movies, series, and episodes
+- **Advanced Filtering**: Filter by year and type
+- **Responsive Design**: Works on both desktop and mobile devices
+- **Dark/Light Mode**: Toggle between dark and light themes
+- **Grid/Table View**: Switch between different view modes
+- **Pagination**: Browse through search results efficiently
+- **Detailed Movie Info**: View comprehensive information about each movie
+- **Persistent Settings**: Saves theme preference and view settings
+
+## 🛠️ Technologies
+
+- React
+- TypeScript
+- Material-UI (MUI)
+- Redux Toolkit
+- React Router
+- SWR
+- Lodash
+- Vite
+- Eslint
+- Prettier
+- Husky
+- Commitlint
+- Lint Staged
 
 ## 📄 License
 
