@@ -1,18 +1,18 @@
 import {
   CardMedia,
-  Chip,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
+  Typography
 } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DETAIL_ROUTE } from '../../../config/api';
 import { MovieSearchResult, typeColors } from '../../../types';
+import { Badge } from '../../badge';
 
 export const RenderTableView: React.FC<{ movies: MovieSearchResult[]; rowsPerPage: number }> = (
   props
@@ -61,15 +61,10 @@ export const RenderTableView: React.FC<{ movies: MovieSearchResult[]; rowsPerPag
               </TableCell>
               <TableCell>{movie.Title}</TableCell>
               <TableCell>
-                <Chip label={movie.Year} size="small" variant="outlined" sx={{ borderRadius: 1 }} />
+                <Badge label={movie.Year} />
               </TableCell>
               <TableCell>
-                <Chip
-                  label={movie.Type}
-                  size="small"
-                  color={getTypeColor(movie.Type)}
-                  sx={{ borderRadius: 1, textTransform: 'capitalize' }}
-                />
+                <Badge label={movie.Type} color={getTypeColor(movie.Type)} />
               </TableCell>
               <TableCell>
                 <Typography

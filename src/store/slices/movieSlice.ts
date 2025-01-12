@@ -40,24 +40,13 @@ const movieSlice = createSlice({
     setViewMode: (state, action: PayloadAction<MovieListState['viewMode']>) => {
       state.viewMode = action.payload;
     },
-    setRowsPerPage: (state, action: PayloadAction<number>) => {
-      state.rowsPerPage = action.payload;
-      state.page = DEFAULT_PAGE;
-    },
     setAllFilters: (state, action: PayloadAction<Partial<MovieListState>>) => {
       return { ...state, ...action.payload };
     },
   },
 });
 
-export const {
-  setSearchTerm,
-  setYear,
-  setType,
-  setPage,
-  setViewMode,
-  setRowsPerPage,
-  setAllFilters,
-} = movieSlice.actions;
+export const { setSearchTerm, setYear, setType, setPage, setViewMode, setAllFilters } =
+  movieSlice.actions;
 
 export default movieSlice.reducer;

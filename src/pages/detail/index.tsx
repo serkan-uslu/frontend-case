@@ -22,8 +22,9 @@ import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DetailSkeleton } from '../../components/skeletons/detail';
 import { useMovieDetails } from '../../hooks/useOMDb';
-import { typeColors } from '../../types';
 import { NotFound } from '../../components/not-found';
+import { getTypeColor } from '../../utils/helpers';
+import { Badge } from '../../components/badge';
 
 export const MovieDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -165,12 +166,8 @@ export const MovieDetails: React.FC = () => {
 
               <Stack direction="row" spacing={1} sx={{ mb: 3 }}>
                 <Chip label={movie.Year} size="small" variant="outlined" sx={{ borderRadius: 1 }} />
-                <Chip
-                  label={movie.Type}
-                  size="small"
-                  color={typeColors[movie.Type]}
-                  sx={{ borderRadius: 1, textTransform: 'capitalize' }}
-                />
+
+                <Badge label={movie.Type} color={getTypeColor(movie.Type)} />
                 {movie.Runtime && (
                   <Chip
                     label={movie.Runtime}

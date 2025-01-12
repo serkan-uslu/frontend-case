@@ -1,8 +1,9 @@
-import { Box, Card, CardContent, CardMedia, Chip, Grid, Typography } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, Grid, Typography } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RenderGridViewProps } from '../../../types';
 import { getTypeColor } from '../../../utils/helpers';
+import { Badge } from '../../badge';
 
 export const RenderGridView: React.FC<RenderGridViewProps> = ({ movies }) => {
   const navigate = useNavigate();
@@ -44,16 +45,8 @@ export const RenderGridView: React.FC<RenderGridViewProps> = ({ movies }) => {
               </Typography>
 
               <Box sx={{ display: 'flex', gap: 1, flexWrap: 'wrap', mb: 1 }}>
-                <Chip label={movie.Year} size="small" variant="outlined" sx={{ borderRadius: 1 }} />
-                <Chip
-                  label={movie.Type}
-                  size="small"
-                  color={getTypeColor(movie.Type)}
-                  sx={{
-                    borderRadius: 1,
-                    textTransform: 'capitalize',
-                  }}
-                />
+                <Badge label={movie.Year} />
+                <Badge label={movie.Type} color={getTypeColor(movie.Type)} />
               </Box>
 
               <Typography
