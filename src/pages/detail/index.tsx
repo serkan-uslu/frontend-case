@@ -1,3 +1,5 @@
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import {
   Box,
   Button,
@@ -6,25 +8,24 @@ import {
   CardMedia,
   Chip,
   Divider,
-  Grid,
-  Rating,
-  Typography,
   Fab,
-  useScrollTrigger,
   Fade,
-  useTheme,
-  useMediaQuery,
+  Grid,
   Stack,
+  Typography,
+  useMediaQuery,
+  useScrollTrigger,
+  useTheme
 } from '@mui/material';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { Badge } from '../../components/badge';
+import { DetailItem } from '../../components/detail/detail-item';
+import { RatingSection } from '../../components/detail/rating-section';
+import { NotFound } from '../../components/not-found';
 import { DetailSkeleton } from '../../components/skeletons/detail';
 import { useMovieDetails } from '../../hooks/useOMDb';
-import { NotFound } from '../../components/not-found';
 import { getTypeColor } from '../../utils/helpers';
-import { Badge } from '../../components/badge';
 
 export const MovieDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -56,36 +57,6 @@ export const MovieDetails: React.FC = () => {
   if (error || !movie) {
     return <NotFound />;
   }
-
-  const DetailItem = ({ label, value }: { label: string; value: string | React.ReactNode }) => {
-    if (!value || value === 'N/A') {
-      return null;
-    }
-    return (
-      <Box sx={{ mb: 2 }}>
-        <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-          {label}
-        </Typography>
-        <Typography variant="body1">{value}</Typography>
-      </Box>
-    );
-  };
-
-  const RatingSection = () => (
-    <Box sx={{ mb: 3 }}>
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-        <Rating value={parseFloat(movie.imdbRating) / 2} precision={0.1} readOnly max={5} />
-        <Typography variant="body2" color="text.secondary">
-          IMDb: {movie.imdbRating}/10 ({movie.imdbVotes} votes)
-        </Typography>
-      </Box>
-      {movie.Ratings?.map((rating, index) => (
-        <Typography key={index} variant="body2" color="text.secondary">
-          {rating.Source}: {rating.Value}
-        </Typography>
-      ))}
-    </Box>
-  );
 
   const PlotSection = () => {
     const [isExpanded, setIsExpanded] = React.useState(false);
@@ -203,7 +174,7 @@ export const MovieDetails: React.FC = () => {
                   </Stack>
                 </Box>
               )}
-              <RatingSection />
+              <RatingSection movie={movie} />
               <PlotSection />
               <Divider sx={{ my: 3 }} />
               <Grid container spacing={3}>
