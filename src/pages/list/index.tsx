@@ -1,6 +1,8 @@
-import { Alert, Box, Pagination, Paper, Typography, useMediaQuery, useTheme } from '@mui/material';
+import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
+import { Box, Pagination, Typography, useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { EmptyState } from '../../components/empty-state';
 import { RenderGridView } from '../../components/list/grid';
 import { RenderTableView } from '../../components/list/table';
 import { SearchControls } from '../../components/search';
@@ -10,8 +12,6 @@ import { RootState } from '../../store';
 import { setPage } from '../../store/slices/movieSlice';
 import { MovieListState } from '../../types/omdb';
 import { getTotalPages } from '../../utils/helpers';
-import { EmptyState } from '../../components/empty-state';
-import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
 
 export const MovieList: React.FC = () => {
   const theme = useTheme();
