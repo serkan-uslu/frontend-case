@@ -1,10 +1,7 @@
-import { Box, Typography, SvgIcon } from '@mui/material';
 import SearchOffIcon from '@mui/icons-material/SearchOff';
+import { Box, SvgIcon, Typography } from '@mui/material';
 import React from 'react';
-
-interface EmptyStateProps {
-  message?: string;
-}
+import { EmptyStateProps } from '../../types/index';
 
 export const EmptyState: React.FC<EmptyStateProps> = (props: EmptyStateProps) => {
   const { message = 'No content found' } = props;
@@ -21,9 +18,9 @@ export const EmptyState: React.FC<EmptyStateProps> = (props: EmptyStateProps) =>
     >
       <SvgIcon
         component={SearchOffIcon}
+        color="primary"
         sx={{
           fontSize: 64,
-          color: 'text.secondary',
           mb: 2,
           opacity: 0.5,
         }}

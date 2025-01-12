@@ -20,3 +20,5 @@ export const DETAIL_ROUTE = '/movie/';
 export const ROWS_PER_PAGE_OPTIONS = [5, 10, 15, 20, 25];
 export const TYPE_OPTIONS = ['movie', 'series', 'episode'];
 export const VIEW_MODE_OPTIONS = ['grid', 'table'];
+
+export const IMAGE_NOT_FOUND_URL = 'https://placehold.co/500x600?text=';

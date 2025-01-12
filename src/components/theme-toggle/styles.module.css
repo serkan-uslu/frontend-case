@@ -1,0 +1,14 @@
+.themeToggleButton {
+    position: fixed;
+    right: 16px;
+    top: 16px;
+    background-color: var(--background-paper);
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1200;
+    transition: opacity 0.2s;
+}
+
+.themeToggleButton:hover {
+    background-color: var(--background-paper);
+    opacity: 0.9;
+}

@@ -7,7 +7,7 @@ import {
   ROWS_PER_PAGE,
   DEFAULT_PAGE,
 } from '../../config/api';
-import { MovieListState } from '../../types/omdb';
+import { MovieListState } from '../../types';
 
 const initialState: MovieListState = {
   searchTerm: DEFAULT_SEARCH_TERM,

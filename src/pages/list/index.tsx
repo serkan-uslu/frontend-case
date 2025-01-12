@@ -19,7 +19,7 @@ import { ListSkeleton } from '../../components/skeletons/list';
 import { useMovieSearch } from '../../hooks/useOMDb';
 import { RootState } from '../../store';
 import { setPage } from '../../store/slices/movieSlice';
-import { MovieListState } from '../../types/omdb';
+import { MovieListState } from '../../types';
 import { getTotalPages } from '../../utils/helpers';
 import { FirstPage, LastPage } from '@mui/icons-material';
 

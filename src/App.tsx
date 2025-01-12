@@ -45,10 +45,8 @@ const AppContent = () => {
 
 export default function App() {
   return (
-    <React.StrictMode>
-      <Provider store={store}>
-        <AppContent />
-      </Provider>
-    </React.StrictMode>
+    <Provider store={store}>
+      <AppContent />
+    </Provider>
   );
 }

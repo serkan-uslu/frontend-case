@@ -1,6 +1,6 @@
 import { API_BASE_URL, API_KEY } from '../config/api';
-import { createOMDbError, isOMDbError } from './errors';
-import type { ErrorResponse } from '../types/omdb';
+import type { ErrorResponse } from '../types';
+import { createOMDbError, isOMDbError } from '../utils/helpers';
 
 export const fetcher = async <T>(endpoint: string): Promise<T> => {
   try {

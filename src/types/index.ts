@@ -1,3 +1,5 @@
+import { PaletteMode } from '@mui/material';
+
 export interface MovieSearchResult {
   Title: string;
   Year: string;
@@ -70,5 +72,43 @@ export interface MovieListState {
   type: 'movie' | 'series' | 'episode' | '';
   page: number;
   viewMode: 'grid' | 'table';
+  rowsPerPage: number;
+}
+
+export interface EmptyStateProps {
+  message?: string;
+}
+
+export const typeColors: Record<string, 'primary' | 'secondary' | 'success'> = {
+  movie: 'primary',
+  series: 'secondary',
+  episode: 'success',
+};
+
+export interface OMDbError {
+  name: 'OMDbError';
+  message: string;
+  statusCode: number;
+}
+
+export interface RenderGridViewProps {
+  movies: MovieSearchResult[];
+  rowsPerPage: number;
+}
+
+export interface ListSkeletonProps {
+  viewMode: 'grid' | 'table';
+  rowsPerPage: number;
+}
+
+export interface ThemeState {
+  mode: PaletteMode;
+}
+
+export interface GridSkeletonProps {
+  rowsPerPage: number;
+}
+
+export interface TableSkeletonProps {
   rowsPerPage: number;
 }

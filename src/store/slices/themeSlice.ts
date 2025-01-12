@@ -1,9 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { PaletteMode } from '@mui/material';
-
-interface ThemeState {
-  mode: PaletteMode;
-}
+import { ThemeState } from '../../types';
 
 const initialState: ThemeState = {
   mode: (localStorage.getItem('themeMode') as PaletteMode) || 'light',

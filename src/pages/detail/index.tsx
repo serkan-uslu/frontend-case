@@ -22,15 +22,8 @@ import React, { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { DetailSkeleton } from '../../components/skeletons/detail';
 import { useMovieDetails } from '../../hooks/useOMDb';
-import { EmptyState } from '../../components/empty-state';
-import { ImageNotFound } from '../../components/image-not-found';
-
-// Tür renklerini tanımla
-const typeColors: Record<string, 'primary' | 'secondary' | 'success'> = {
-  movie: 'primary',
-  series: 'secondary',
-  episode: 'success',
-};
+import { typeColors } from '../../types';
+import { NotFound } from '../../components/not-found';
 
 export const MovieDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -55,26 +48,12 @@ export const MovieDetails: React.FC = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const getTypeColor = (type: string) => typeColors[type?.toLowerCase()] || 'default';
-
   if (isLoading) {
     return <DetailSkeleton />;
   }
 
   if (error || !movie) {
-    return (
-      <Box sx={{ p: 3, textAlign: 'center' }}>
-        <EmptyState message="Movie not found" />
-        <Button
-          variant="contained"
-          onClick={handleBack}
-          sx={{ m: 2 }}
-          startIcon={<ArrowBackIcon />}
-        >
-          Back to List
-        </Button>
-      </Box>
-    );
+    return <NotFound />;
   }
 
   const DetailItem = ({ label, value }: { label: string; value: string | React.ReactNode }) => {
@@ -165,7 +144,9 @@ export const MovieDetails: React.FC = () => {
               <CardMedia
                 component="img"
                 image={
-                  movie.Poster !== 'N/A' ? movie.Poster : ImageNotFound({ movieName: movie.Title })
+                  movie.Poster !== 'N/A'
+                    ? movie.Poster
+                    : `https://placehold.co/500x600?text=${movie.Title}`
                 }
                 alt={movie.Title}
                 sx={{
@@ -187,7 +168,7 @@ export const MovieDetails: React.FC = () => {
                 <Chip
                   label={movie.Type}
                   size="small"
-                  color={getTypeColor(movie.Type)}
+                  color={typeColors[movie.Type]}
                   sx={{ borderRadius: 1, textTransform: 'capitalize' }}
                 />
                 {movie.Runtime && (
@@ -225,13 +206,9 @@ export const MovieDetails: React.FC = () => {
                   </Stack>
                 </Box>
               )}
-
               <RatingSection />
-
               <PlotSection />
-
               <Divider sx={{ my: 3 }} />
-
               <Grid container spacing={3}>
                 <Grid item xs={12} sm={6}>
                   <DetailItem label="Director" value={movie.Director} />

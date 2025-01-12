@@ -1,37 +1,31 @@
-import { GridView, ViewList, Clear } from '@mui/icons-material';
+import { Clear, GridView, ViewList } from '@mui/icons-material';
+import FilterListIcon from '@mui/icons-material/FilterList';
 import {
   Box,
+  Button,
+  Drawer,
+  FormControl,
+  FormHelperText,
   Grid,
+  IconButton,
+  InputAdornment,
   MenuItem,
   Select,
   SelectChangeEvent,
   TextField,
   ToggleButton,
   ToggleButtonGroup,
-  useTheme,
-  useMediaQuery,
-  IconButton,
-  Drawer,
-  Button,
-  InputAdornment,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from '@mui/material';
-import FilterListIcon from '@mui/icons-material/FilterList';
+import debounce from 'lodash.debounce';
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import debounce from 'lodash.debounce';
+import { TYPE_OPTIONS } from '../../config/api';
 import { RootState } from '../../store';
 import { setSearchTerm, setType, setViewMode, setYear } from '../../store/slices/movieSlice';
-import { TYPE_OPTIONS } from '../../config/api';
-
-const generateYearOptions = () => {
-  const currentYear = new Date().getFullYear();
-  const years: number[] = [];
-  for (let year = currentYear; year >= 1888; year--) {
-    years.push(year);
-  }
-  return years;
-};
+import { generateYearOptions } from '../../utils/helpers';
 
 export const SearchControls: React.FC = () => {
   const theme = useTheme();
@@ -44,10 +38,8 @@ export const SearchControls: React.FC = () => {
   const [localSearch, setLocalSearch] = React.useState(searchTerm);
   const [localYear, setLocalYear] = React.useState(year);
 
-  // Debounced search handler
   const debouncedSearch = useCallback(
     debounce((value: string) => {
-      // Boşlukları temizle ve minimum 3 karakter kontrolü yap
       const trimmedValue = value.trim();
       if (trimmedValue.length >= 3) {
         dispatch(setSearchTerm(trimmedValue));
@@ -80,11 +72,9 @@ export const SearchControls: React.FC = () => {
   };
 
   const handleLocalSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // Başlangıçtaki boşlukları kaldır
     const value = event.target.value.trimStart();
     setLocalSearch(value);
 
-    // Boş string kontrolü ve minimum 3 karakter kontrolü
     const trimmedValue = value.trim();
     if (trimmedValue === '') {
       dispatch(setSearchTerm(''));
@@ -101,120 +91,131 @@ export const SearchControls: React.FC = () => {
     setLocalYear(year);
   }, [year]);
 
-  const searchSection = (
+  const SearchSection = (
     <Box>
-      <Typography variant="body2" sx={{ mb: 1 }}>
-        Search Movies/Series/Episodes
-      </Typography>
-      <TextField
-        size="small"
-        fullWidth
-        value={localSearch}
-        placeholder="Enter at least 3 characters"
-        onChange={handleLocalSearchChange}
-        variant="outlined"
-        InputLabelProps={{ shrink: true }}
-        label={null}
-        inputProps={{
-          spellCheck: 'false',
-          minLength: 3,
-        }}
-        InputProps={{
-          endAdornment: localSearch ? (
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="clear search"
-                onClick={() => {
-                  setLocalSearch('');
-                  dispatch(setSearchTerm(''));
-                }}
-                edge="end"
-                size="small"
-              >
-                <Clear />
-              </IconButton>
-            </InputAdornment>
-          ) : null,
-        }}
-      />
+      <FormControl fullWidth>
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          Search
+        </Typography>
+        <TextField
+          size="small"
+          fullWidth
+          value={localSearch}
+          placeholder="Enter at least 3 characters"
+          onChange={handleLocalSearchChange}
+          variant="outlined"
+          InputLabelProps={{ shrink: true }}
+          label={null}
+          inputProps={{
+            spellCheck: 'false',
+            minLength: 3,
+          }}
+          InputProps={{
+            endAdornment: localSearch ? (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="clear search"
+                  onClick={() => {
+                    setLocalSearch('');
+                    dispatch(setSearchTerm(''));
+                  }}
+                  edge="end"
+                  size="small"
+                >
+                  <Clear />
+                </IconButton>
+              </InputAdornment>
+            ) : null,
+          }}
+        />
+        <FormHelperText sx={{ mt: 1 }}>
+          {localSearch.length < 3 ? 'Enter at least 3 characters' : 'Search Movies/Series/Episodes'}
+        </FormHelperText>
+      </FormControl>
     </Box>
   );
 
-  const typeSection = (
+  const TypeSection = (
     <Box>
-      <Typography variant="body2" sx={{ mb: 1 }}>
-        Type
-      </Typography>
-      <Select
-        size="small"
-        fullWidth
-        value={type}
-        onChange={handleTypeChange}
-        displayEmpty
-        variant="outlined"
-      >
-        <MenuItem value="">
-          <em>All Types</em>
-        </MenuItem>
-        {TYPE_OPTIONS.map((option: string, index: number) => (
-          <MenuItem value={option} key={index} sx={{ textTransform: 'capitalize' }}>
-            {option}
+      <FormControl fullWidth>
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          Type
+        </Typography>
+        <Select
+          size="small"
+          fullWidth
+          value={type}
+          onChange={handleTypeChange}
+          displayEmpty
+          variant="outlined"
+        >
+          <MenuItem value="">
+            <em>All Types</em>
           </MenuItem>
-        ))}
-      </Select>
+          {TYPE_OPTIONS.map((option: string, index: number) => (
+            <MenuItem value={option} key={index} sx={{ textTransform: 'capitalize' }}>
+              {option}
+            </MenuItem>
+          ))}
+        </Select>
+        <FormHelperText sx={{ mt: 1 }}>Select the type</FormHelperText>
+      </FormControl>
     </Box>
   );
 
-  const yearSection = (
+  const YearSection = (
     <Box>
-      <Typography variant="body2" sx={{ mb: 1 }}>
-        Release Date
-      </Typography>
-      <Select
-        size="small"
-        fullWidth
-        value={localYear}
-        onChange={handleYearChange}
-        displayEmpty
-        variant="outlined"
-        endAdornment={
-          localYear ? (
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="clear year"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setLocalYear('');
-                  dispatch(setYear(''));
-                }}
-                size="small"
-                sx={{ mr: 2 }}
-              >
-                <Clear />
-              </IconButton>
-            </InputAdornment>
-          ) : null
-        }
-      >
-        <MenuItem value="">
-          <em>All Years</em>
-        </MenuItem>
-        {generateYearOptions().map((year) => (
-          <MenuItem key={year} value={year.toString()}>
-            {year}
+      <FormControl fullWidth>
+        <Typography variant="body2" sx={{ mb: 1 }}>
+          Release Date
+        </Typography>
+        <Select
+          size="small"
+          fullWidth
+          value={localYear}
+          onChange={handleYearChange}
+          displayEmpty
+          variant="outlined"
+          endAdornment={
+            localYear ? (
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="clear year"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setLocalYear('');
+                    dispatch(setYear(''));
+                  }}
+                  size="small"
+                  sx={{ mr: 2 }}
+                >
+                  <Clear />
+                </IconButton>
+              </InputAdornment>
+            ) : null
+          }
+        >
+          <MenuItem value="">
+            <em>All Years</em>
           </MenuItem>
-        ))}
-      </Select>
+          {generateYearOptions().map((year: number) => (
+            <MenuItem key={year} value={year.toString()}>
+              {year}
+            </MenuItem>
+          ))}
+        </Select>
+        <FormHelperText sx={{ mt: 1 }}>Select the release year</FormHelperText>
+      </FormControl>
     </Box>
   );
 
   const filterContent = (
     <>
       <Grid item xs={12} sm={2}>
-        {yearSection}
+        {YearSection}
       </Grid>
       <Grid item xs={12} sm={2}>
-        {typeSection}
+        {TypeSection}
       </Grid>
     </>
   );
@@ -224,7 +225,6 @@ export const SearchControls: React.FC = () => {
       sx={{
         top: 0,
         zIndex: 1100,
-        backgroundColor: 'background.paper',
         pb: 1,
         borderBottom: '1px solid',
         borderColor: 'divider',
@@ -232,7 +232,7 @@ export const SearchControls: React.FC = () => {
     >
       <Grid container spacing={2} sx={{ mb: 2 }}>
         <Grid item xs={isMobile ? 10 : 12} sm={3}>
-          {searchSection}
+          {SearchSection}
         </Grid>
 
         {isMobile ? (
@@ -257,10 +257,10 @@ export const SearchControls: React.FC = () => {
               <Box sx={{ p: 2 }}>
                 <Grid container spacing={2}>
                   <Grid item xs={12}>
-                    {searchSection}
+                    {SearchSection}
                   </Grid>
                   <Grid item xs={12}>
-                    {typeSection}
+                    {TypeSection}
                   </Grid>
                   <Grid item xs={12}>
                     <Button

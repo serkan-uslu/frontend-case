@@ -2,11 +2,11 @@ import Brightness4Icon from '@mui/icons-material/Brightness4';
 import Brightness7Icon from '@mui/icons-material/Brightness7';
 import LocalMoviesIcon from '@mui/icons-material/LocalMovies';
 import { AppBar, Box, Container, IconButton, Toolbar, Typography } from '@mui/material';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootState } from '../../store';
 import { toggleTheme } from '../../store/slices/themeSlice';
-import React from 'react';
 
 export const Header: React.FC = () => {
   const dispatch = useDispatch();
@@ -42,9 +42,7 @@ export const Header: React.FC = () => {
               Movie Search
             </Typography>
           </Box>
-
           <Box sx={{ flexGrow: 1 }} />
-
           <IconButton
             onClick={() => dispatch(toggleTheme())}
             color="inherit"

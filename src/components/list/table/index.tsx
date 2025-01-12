@@ -1,26 +1,18 @@
 import {
   CardMedia,
+  Chip,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
   TableRow,
-  Chip,
   Typography,
 } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DETAIL_ROUTE } from '../../../config/api';
-import { MovieSearchResult } from '../../../types/omdb';
-import { ImageNotFound } from '../../image-not-found';
-
-// Tür renklerini tanımla
-const typeColors: Record<string, 'primary' | 'secondary' | 'success'> = {
-  movie: 'primary',
-  series: 'secondary',
-  episode: 'success',
-};
+import { MovieSearchResult, typeColors } from '../../../types';
 
 export const RenderTableView: React.FC<{ movies: MovieSearchResult[]; rowsPerPage: number }> = (
   props
@@ -61,7 +53,7 @@ export const RenderTableView: React.FC<{ movies: MovieSearchResult[]; rowsPerPag
                   image={
                     movie.Poster !== 'N/A'
                       ? movie.Poster
-                      : ImageNotFound({ movieName: movie.Title })
+                      : `https://placehold.co/500x600?text=${movie.Title}`
                   }
                   alt={movie.Title}
                   sx={{ objectFit: 'cover', borderRadius: 1 }}

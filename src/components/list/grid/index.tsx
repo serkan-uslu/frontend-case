@@ -1,25 +1,11 @@
-import { Box, Card, CardContent, CardMedia, Grid, Typography, Chip } from '@mui/material';
-import { MovieSearchResult } from '../../../types/omdb';
-import { useNavigate } from 'react-router-dom';
-import { ImageNotFound } from '../../image-not-found';
+import { Box, Card, CardContent, CardMedia, Chip, Grid, Typography } from '@mui/material';
 import React from 'react';
-
-// Tür renklerini tanımla
-const typeColors: Record<string, 'primary' | 'secondary' | 'success'> = {
-  movie: 'primary',
-  series: 'secondary',
-  episode: 'success',
-};
-
-interface RenderGridViewProps {
-  movies: MovieSearchResult[];
-  rowsPerPage: number;
-}
+import { useNavigate } from 'react-router-dom';
+import { RenderGridViewProps } from '../../../types';
+import { getTypeColor } from '../../../utils/helpers';
 
 export const RenderGridView: React.FC<RenderGridViewProps> = ({ movies }) => {
   const navigate = useNavigate();
-
-  const getTypeColor = (type: string) => typeColors[type.toLowerCase()] || 'default';
 
   return (
     <Grid container spacing={2}>
@@ -42,7 +28,9 @@ export const RenderGridView: React.FC<RenderGridViewProps> = ({ movies }) => {
             <CardMedia
               component="img"
               image={
-                movie.Poster !== 'N/A' ? movie.Poster : ImageNotFound({ movieName: movie.Title })
+                movie.Poster !== 'N/A'
+                  ? movie.Poster
+                  : `https://placehold.co/500x600?text=${movie.Title}`
               }
               alt={movie.Title}
               sx={{
