@@ -132,7 +132,6 @@ export const MovieList: React.FC = () => {
                 backgroundColor: 'background.paper',
                 borderTop: { xs: 1, sm: 0 },
                 borderColor: 'divider',
-                px: { xs: 2, sm: 0 },
                 py: { xs: 1, sm: 0 },
                 zIndex: 1,
               }}
